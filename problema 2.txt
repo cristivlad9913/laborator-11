@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{char nume[100];
+float nota;
+  FILE *f=fopen("rezultate.txt","r+");
+  while(!feof(f))
+  {
+      fscanf(f,"%s",&nume);
+      if(feof(f))
+        break;
+      fscanf(f,"%f",&nota);
+       if(nota<9.00)
+        {
+            fseek(f,-4,SEEK_CUR);
+            nota++;
+      fprintf(f,"%.2f",nota);
+       }
+       else
+        if(nota>=9.00 && nota<10.00)
+       {nota=10;
+           fseek(f,-4,SEEK_CUR);
+         fprintf(f,"%.1f",nota);
+fprintf(f,"%s","\n");
+       }
+
+
+  }
+
+    return 0;
+}

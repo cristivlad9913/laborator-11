@@ -1,0 +1,37 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    char s1[100],s2[100],aux[100],c;
+    int i=0;
+    fgets(s1,100,stdin);
+    fgets(s2,100,stdin);
+    s1[strlen(s1)-1]=0;     //citesc cele 2 siruri si sterg \n
+     s2[strlen(s2)-1]=0;
+    FILE *f=fopen("fisier.in","rb+");
+    int n=strlen(s1);
+int contor=0;i=0;
+while(!feof(f))
+{
+    fread(&c,sizeof(char),1,f);    //citesc caracter cu caracter continutul fisierului
+    if(feof(f))
+        break;
+    if(c==' ')         //daca ce am citit e spatiu inseamna ca am terminat cuvantul
+        contor=0;
+    else
+        contor++;       //altfel numar sa vad cate caractere are(sa nu fie problema de care zicea tutorele din abc -> ab desi nu sunt egale
+if(c==s1[i])    //daca am gasit caractere egale vad cate sunt egale
+    i++;
+
+    if(i==contor && contor==n) //daca numarul de caractere citite este strlen(s1) si cele corecte este tot strlen(s1) inseamna ca am gasit fix cuvantul
+    {
+        fseek(f,-n,SEEK_CUR);   //ma pozitionez cu cate caractere are cuvantul inapoi pt a-l suprascrie
+        fwrite(s2,n,1,f);  //suprascriu
+        i=0; //repet magia
+        contor=0;
+    }
+
+}
+    return 0;
+}

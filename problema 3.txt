@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct elevi
+{
+    int id;
+    char nume[21];
+    char prenume[21];
+    float nota;
+};
+void creare(char *fisier)
+{
+FILE *f;
+f=fopen(fisier,"wb"); //deschid fisierul binar in scriere
+int n;
+scanf("%d",&n);
+struct elevi p[100];
+for(int i=0;i<n;i++)
+{
+    scanf("%d",&p[i].id);
+ scanf("%s",&p[i].nume);  //citesc de la tastatura n si datele despre elevi
+  scanf("%s",&p[i].prenume);
+    scanf("%f",&p[i].nota);
+}
+for(int i=0;i<n;i++)
+ fwrite(&p[i],sizeof(struct elevi),1,f); //scriu in fisierul binar datele,in felul asta sunt scrise sub forma "bloc" a lor
+ fclose(f);
+}
+
+void afisare(char *fisier, char *fisier2)
+{FILE *f,*f2;
+f=fopen(fisier,"rb");  //deschid f pt citire binara
+f2=fopen(fisier2,"w"); //deschid f2 pt scriere normala
+int i=0;
+struct elevi p[100];
+while(!feof(f))
+{
+
+    fread(&p[i],sizeof(struct elevi),1,f);  //citesc din fisierul binar,citire sub forma de "bloc"
+if(feof(f))
+    break;
+      fprintf(f2,"%d\n",p[i].id);
+      fprintf(f2,"%s\n",p[i].nume);  //scriu in fisierul normal datele
+      fprintf(f2,"%s\n",p[i].prenume);
+      fprintf(f2,"%f\n",p[i].nota);
+      i++;
+}
+fclose(f);fclose(f2);
+}
+void adaugare(char *fisier)
+{
+FILE *f=fopen(fisier,"a+b"); //trebuie append(a) din motive ciudate nu merge rb
+printf("\n");
+printf("citeste un nou student\n");
+struct elevi a,p[100];
+   scanf("%d",&a.id);
+   scanf("%s",&a.nume);   //citesc noul student
+   scanf("%s",&a.prenume);
+   scanf("%f",&a.nota);
+    fseek(f,0,SEEK_END); //ma pozitionez la sfarsitul fisierului binar(altfel datele precedente vor fi suprascrise
+    fwrite(&a,sizeof(struct elevi),1,f);  //scriu noul student
+    /*
+int i=0;
+fseek(f,0,SEEK_SET);   //verificare in consola daca adauga elementul in fisierul binar
+    while(!feof(f))
+{
+
+    fread(&p[i],sizeof(struct elevi),1,f);
+if(feof(f))
+    break;
+      fprintf(stdout,"%d\n",p[i].id);
+      fprintf(stdout,"%s\n",p[i].nume);
+      fprintf(stdout,"%s\n",p[i].prenume);
+      fprintf(stdout,"%f\n",p[i].nota);
+      i++;
+}
+*/
+
+}
+int main()
+{
+    char fisier[]="fisier.txt",fisier2[]="fisier2.txt";
+creare(fisier);
+afisare(fisier,fisier2);
+adaugare(fisier);
+    return 0;
+}
